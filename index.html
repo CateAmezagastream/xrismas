@@ -202,6 +202,8 @@ input[type=range]{width:100%;accent-color:var(--frame)}
 .camBox{position:relative;width:min(92vw,56vh);aspect-ratio:3/4;border:4px solid #fff;border-radius:14px;overflow:hidden;background:#000}
 .camBox video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
 .camG{position:absolute;inset:0;width:100%;height:100%}
+.camCount{position:absolute;inset:0;display:grid;place-items:center;font:800 120px Poppins,Fredoka,sans-serif;color:#fff;text-shadow:0 4px 12px #000;pointer-events:none}
+.camCount.flash{background:#fff;color:transparent;text-shadow:none}
 .camTip{position:absolute;left:0;right:0;bottom:8px;margin:0;text-align:center;color:#fff;font-weight:600;font-size:15px;text-shadow:0 1px 3px #000;padding:0 10px}
 .camRow{display:flex;gap:12px}.camRow .btn{min-width:130px}
 .accw{position:absolute;inset:0;pointer-events:none;transform-origin:50% 100%}
@@ -259,12 +261,16 @@ input[type=range]{width:100%;accent-color:var(--frame)}
       <div id="cam" class="cam" hidden>
         <div class="camBox"><video id="camV" playsinline muted autoplay></video>
           <svg class="camG" viewBox="0 0 300 400" aria-hidden="true">
-            <defs><mask id="camM"><rect width="300" height="400" fill="#fff"/><ellipse cx="150" cy="150" rx="78" ry="100" fill="#000"/><rect x="118" y="240" width="64" height="70" rx="10" fill="#000"/></mask></defs>
-            <rect width="300" height="400" fill="rgba(0,0,0,.45)" mask="url(#camM)"/>
-            <ellipse cx="150" cy="150" rx="78" ry="100" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="8 6"/>
-            <path d="M118 246v58M182 246v58M118 304q-50 6-90 40M182 304q50 6 90 40" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="8 6"/>
+            <defs><mask id="camM"><rect width="300" height="400" fill="#fff"/><ellipse cx="150" cy="185" rx="92" ry="122" fill="#000"/></mask></defs>
+            <rect width="300" height="400" fill="rgba(0,0,0,.55)" mask="url(#camM)"/>
+            <ellipse cx="150" cy="185" rx="92" ry="122" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="10 7"/>
+            <path d="M108 180h28M164 180h28" stroke="#F6C445" stroke-width="3" stroke-linecap="round"/>
+            <text x="150" y="172" fill="#F6C445" font-size="11" font-weight="700" text-anchor="middle" font-family="sans-serif">ojos</text>
+            <path d="M118 288h64" stroke="#F6C445" stroke-width="3" stroke-linecap="round"/>
+            <text x="150" y="304" fill="#F6C445" font-size="11" font-weight="700" text-anchor="middle" font-family="sans-serif">mentón</text>
           </svg>
-          <p class="camTip">Poné la cara dentro del óvalo, de frente y con buena luz</p></div>
+          <div class="camCount" id="camCount" hidden></div>
+          <p class="camTip">Cara dentro del óvalo · ojos y mentón en las líneas<br>Solo vos, sin manos, luz de frente</p></div>
         <div class="camRow"><button type="button" class="btn" id="camX">Cancelar</button><button type="button" class="btn go" id="camShot">📸 Sacar</button></div>
       </div>
       <div id="adjust" class="adjust" hidden>
@@ -518,11 +524,20 @@ $("camBtn").addEventListener("click", async () => {
   } catch (e) { $("file").click(); }
 });
 $("camX").addEventListener("click", camStop);
-$("camShot").addEventListener("click", () => {
-  const v = $("camV"), vw = v.videoWidth, vh = v.videoHeight; if (!vw) return;
-  const tw = Math.min(vw, vh * 3 / 4), th = tw * 4 / 3, c = document.createElement("canvas"); c.width = tw; c.height = th;
-  const x = c.getContext("2d"); x.translate(tw, 0); x.scale(-1, 1); x.drawImage(v, (vw - tw) / 2, (vh - th) / 2, tw, th, 0, 0, tw, th);
-  const d = c.toDataURL("image/jpeg", .92); camStop(); usePhoto(d);
+let camBusy = false;
+$("camShot").addEventListener("click", async () => {
+  const v = $("camV"); if (!v.videoWidth || camBusy) return; camBusy = true;
+  const cd = $("camCount"); cd.hidden = false;
+  for (const n of [3, 2, 1]) { cd.textContent = n; await new Promise(r => setTimeout(r, 700)); }
+  cd.textContent = ""; cd.classList.add("flash");
+  const vw = v.videoWidth, vh = v.videoHeight, tw = Math.min(vw, vh * 3 / 4), th = tw * 4 / 3, ox = (vw - tw) / 2, oy = (vh - th) / 2;
+  /* solo la zona del óvalo (con margen) */
+  const bx = tw * 20 / 300, by = th * 15 / 400, bw = tw * 260 / 300, bh = th * 330 / 400;
+  const c = document.createElement("canvas"); c.width = Math.round(bw); c.height = Math.round(bh);
+  const x = c.getContext("2d"); x.translate(c.width, 0); x.scale(-1, 1);
+  x.drawImage(v, ox + (tw - bx - bw), oy + by, bw, bh, 0, 0, c.width, c.height);
+  const d = c.toDataURL("image/jpeg", .92);
+  setTimeout(() => { cd.classList.remove("flash"); cd.hidden = true; camBusy = false; camStop(); usePhoto(d); }, 150);
 });
 $("file").addEventListener("change", e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
