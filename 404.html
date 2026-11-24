@@ -816,7 +816,7 @@ async function playMove(m){
 /* ---------- Pantallas ---------- */
 let view = "crear";
 function route(){
-  const h = location.hash.replace("#", "") || location.pathname.replace(/^\/+|\/+$/g, "");
+  const h = location.hash.replace("#", "") || location.pathname.split("/").filter(Boolean).pop();
   view = ["crear", "jugar", "sala", "tablero"].includes(h) ? h : (myId() ? "jugar" : "crear");
   ["crear", "jugar", "sala", "tablero"].forEach(v => $("v-" + v).hidden = v !== view);
   document.body.classList.toggle("anim", view === "sala");
@@ -829,7 +829,7 @@ window.addEventListener("hashchange", route);
 
 /* ---------- Portada y QR ---------- */
 $("keyShow").textContent = CLAVE;
-try { if (window.QRCode) new QRCode($("qr"), { text: location.origin + "/#crear", width: 320, height: 320, colorDark: "#1F3B2C", colorLight: "#FFFFFF", correctLevel: QRCode.CorrectLevel.M }); else $("qr").textContent = location.origin; } catch (e) {}
+try { if (window.QRCode) new QRCode($("qr"), { text: location.origin + location.pathname.replace(/[^/]*$/, "") + "#crear", width: 320, height: 320, colorDark: "#1F3B2C", colorLight: "#FFFFFF", correctLevel: QRCode.CorrectLevel.M }); else $("qr").textContent = location.origin; } catch (e) {}
 if (ls.get("xrismas-ok") === CLAVE) $("gate").hidden = true; else $("clave").focus();
 $("gateForm").addEventListener("submit", e => {
   e.preventDefault();
