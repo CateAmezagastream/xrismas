@@ -816,11 +816,11 @@ async function playMove(m){
   const p = byId(m.id), nm = p ? p.nombre : "", dz = $("bigdie");
   anim = { id: m.id, cell: m.from }; renderTrack();
   dz.hidden = false; dz.classList.add("rolling");
-  for (let i = 0; i < 8; i++) { dz.textContent = 1 + Math.floor(Math.random() * 6); await wait(80); }
+  for (let i = 0; i < 5; i++) { dz.textContent = 1 + Math.floor(Math.random() * 6); await wait(60); }
   dz.classList.remove("rolling"); dz.textContent = m.d;
   const peak = m.peak || m.mid;
-  for (let c = m.from + 1; c <= peak; c++) { anim.cell = c; hopCell = c; renderTrack(); await wait(360); }
-  if (m.bounce) for (let c = peak - 1; c >= m.mid; c--) { anim.cell = c; hopCell = c; renderTrack(); await wait(360); }
+  for (let c = m.from + 1; c <= peak; c++) { anim.cell = c; hopCell = c; renderTrack(); await wait(230); }
+  if (m.bounce) for (let c = peak - 1; c >= m.mid; c--) { anim.cell = c; hopCell = c; renderTrack(); await wait(230); }
   hopCell = 0; renderTrack();
   const show = async (title, text, ms, conf) => { card(p, title, text); if (conf) confetti(conf); await wait(ms); $("ov").hidden = true; };
   if (m.got && m.got.length) await show("¡Estrella conseguida!", `${nm} consiguió ${m.got.map(o => OBJ_ICON[o] + " " + OBJ_NAME[o]).join(" y ")}.`, 3000, 50);
@@ -828,7 +828,7 @@ async function playMove(m){
   if (m.kind === "down") await show("¡Al calabozo!", `${nm} baja de la ${m.mid} a la ${m.to}.`, 3000);
   if (m.kind === "faltan") { const mo = objsOf(m.id); const falta = (3 - mo.length) + " ⭐";
     await show("¡Te faltan estrellas!", `${nm} llegó a la meta sin ${falta}. Vuelve a la casilla 18.`, 4500); }
-  anim.cell = m.to; renderTrack(); await wait(450);
+  anim.cell = m.to; renderTrack(); await wait(250);
   if (m.kind === "test") await show("★ Prueba para " + nm, PRUEBAS[(m.p || 0) % PRUEBAS.length], 7000);
   if (m.kind === "pozo") await show("☃️ ¡Muñeco de nieve!", `${nm} se queda congelado y pierde el próximo turno.`, 4000);
   if (m.kind === "grinch") await show("💚 ¡El Grinch!", m.lost ? `Le robó ${OBJ_ICON[m.lost]} ${OBJ_NAME[m.lost]} a ${nm}. ¡A buscarla de nuevo!` : `Quiso robarle a ${nm}, pero no tenía estrellas.`, 4500);
@@ -844,7 +844,7 @@ function route(){
   view = ["crear", "jugar", "sala", "tablero"].includes(h) ? h : (myId() ? "jugar" : "crear");
   ["crear", "jugar", "sala", "tablero"].forEach(v => $("v-" + v).hidden = v !== view);
   document.body.classList.toggle("anim", view === "sala");
-  if (view === "tablero") { shownSeq = state.seq || 0; renderTrack(); }
+  if (view === "tablero") { shownSeq = state.started ? (state.seq || 0) : null; renderTrack(); }
   if (view === "sala") renderLobby();
   if (view === "jugar") renderJugar();
   window.scrollTo(0, 0);
