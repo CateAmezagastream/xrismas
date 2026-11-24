@@ -171,7 +171,7 @@ input[type=range]{width:100%;accent-color:var(--frame)}
 @keyframes inflar{0%,100%{scale:2.2}50%{scale:2.4}}
 .tkw .tkname{left:50%;top:100%;transform:translateX(-50%)}
 .tkname{position:absolute;transform:translate(-50%,6%);font-family:var(--pixel);font-weight:700;font-size:1.2vw;background:var(--panel);color:var(--ink);border:2px solid var(--frame);padding:0 .5vw;white-space:nowrap;z-index:2}
-.banner{position:absolute;left:50%;transform:translateX(-50%);top:44%;bottom:auto;font:800 1.9vw Poppins,Fredoka,sans-serif;color:var(--ink,#1E1E1E);box-shadow:6px 6px 0 rgba(0,0,0,.35);display:flex;align-items:center;gap:.8vw;background:var(--panel);border:4px solid var(--frame);padding:.4vw 1vw .4vw .4vw;z-index:1;box-shadow:5px 5px 0 var(--bg-dk)}
+.banner{position:absolute;left:auto;right:1%;transform:none;top:auto;bottom:1.5%;font:700 1.05vw Poppins,Fredoka,sans-serif;color:var(--ink,#1E1E1E);box-shadow:6px 6px 0 rgba(0,0,0,.35);display:flex;align-items:center;gap:.8vw;background:var(--panel);border:4px solid var(--frame);padding:.4vw 1vw .4vw .4vw;z-index:1;box-shadow:5px 5px 0 var(--bg-dk)}
 .banner .mini{width:3.6vw}
 .banner b{font-family:var(--pixel);font-size:2vw}
 .bigdie{position:absolute;right:2%;top:3%;width:8vw;height:8vw;display:grid;place-items:center;font-family:var(--pixel);font-size:5vw;font-weight:700;
@@ -797,7 +797,7 @@ function renderTrack(){
   });
   Object.keys(TOK).forEach(id => { if (!keep.has(id)) { TOK[id].remove(); delete TOK[id]; } });
   { const bn = $("banner"), tid = cid, tp = tid && byId(tid);
-    if (state.started && !state.winner && tp) { bn.hidden = false; bn.textContent = "🎲 Turno de " + (tp.nombre || "") + " · tirá desde tu celular"; } else bn.hidden = true; }
+    if (state.started && !state.winner && tp) { bn.hidden = false; bn.textContent = "🎲 Turno de " + (tp.nombre || ""); } else bn.hidden = true; }
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
 function card(p, title, text){ $("ov-fig").innerHTML = ""; if (p) $("ov-fig").appendChild(mini(p)); $("ov-t").textContent = title; $("ov-p").textContent = text; $("ov").hidden = false; }
