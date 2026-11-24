@@ -172,7 +172,7 @@ input[type=range]{width:100%;accent-color:var(--frame)}
 @keyframes inflar{0%,100%{scale:2.2}50%{scale:2.4}}
 .tkw .tkname{left:50%;top:100%;transform:translateX(-50%)}
 .tkname{position:absolute;transform:translate(-50%,6%);font-family:var(--pixel);font-weight:700;font-size:1.2vw;background:var(--panel);color:var(--ink);border:2px solid var(--frame);padding:0 .5vw;white-space:nowrap;z-index:2}
-.banner{position:absolute;left:.8%;top:36%;z-index:1;display:block;font:800 1.15vw Poppins,Fredoka,sans-serif;color:#FFF6E6;background:#8A5A3C;border:.25vw solid #2B1A10;border-radius:.4vw;padding:.5vw .9vw;transform:rotate(-5deg);box-shadow:inset 0 -.3vw 0 #6B4428}.banner::after{content:"";position:absolute;left:50%;top:100%;width:.7vw;height:3.2vw;margin-left:-.35vw;background:#6B4428;border:.2vw solid #2B1A10;border-top:0;z-index:-1}.banner::before{content:"";position:absolute;left:25%;right:25%;top:calc(100% + 2.4vw);height:1.4vw;background:#FFF8EC;border-radius:50% 50% 40% 40%;border:.15vw solid #2B1A10;box-shadow:0 .15vw 0 rgba(0,0,0,.15);z-index:1}
+.banner{position:absolute;left:1%;top:62%;z-index:1;display:block;font:800 1.15vw Poppins,Fredoka,sans-serif;color:#FFF6E6;background:#8A5A3C;border:.25vw solid #2B1A10;border-radius:.4vw;padding:.5vw .9vw;transform:rotate(-5deg);box-shadow:inset 0 -.3vw 0 #6B4428}.banner::after{content:"";position:absolute;left:50%;top:100%;width:.7vw;height:3.2vw;margin-left:-.35vw;background:#6B4428;border:.2vw solid #2B1A10;border-top:0;z-index:-1}.banner::before{content:"";position:absolute;left:25%;right:25%;top:calc(100% + 2.4vw);height:1.4vw;background:#FFF8EC;border-radius:50% 50% 40% 40%;border:.15vw solid #2B1A10;box-shadow:0 .15vw 0 rgba(0,0,0,.15);z-index:1}
 .banner .mini{width:3.6vw}
 .banner b{font-family:var(--pixel);font-size:2vw}
 .bigdie{position:absolute;right:2%;top:3%;width:8vw;height:8vw;display:grid;place-items:center;font-family:var(--pixel);font-size:5vw;font-weight:700;
@@ -758,8 +758,8 @@ function buildTrack(){
   const NS = "http://www.w3.org/2000/svg", INK = "#1E1E1E";
   const el = (t, a, parent) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); (parent || svg).appendChild(e); return e; };
   el("image", { href: "tablero.jpg", x: -320, y: -150, width: 1920, height: 1080, preserveAspectRatio: "none" });
-  const P = [[-3,840],[146,845],[295,849],[446,851],[603,850],[773,850],[928,833],[1067,819],[1194,785],[1327,722],[1400,607],[1303,516],[1140,498],[962,516],[788,522],[613,522],[437,526],[268,501],[92,455],[-7,356],[70,240],[211,189],[358,159],[510,138],[664,122],[825,116],[988,119],[1149,122],[1312,110],[1482,53]];
-  CELLPOS = { 0: { x: -163, y: 831 } }; P.forEach(([x, y], i) => CELLPOS[i + 1] = { x, y });
+  const P = [[127,800],[246,804],[365,807],[485,809],[610,808],[746,808],[870,795],[981,783],[1083,756],[1189,705],[1247,614],[1170,541],[1039,526],[897,541],[758,546],[618,546],[478,549],[342,529],[202,493],[123,413],[185,320],[297,280],[415,255],[536,239],[659,226],[788,222],[918,224],[1047,226],[1177,217],[1313,171]];
+  CELLPOS = { 0: { x: -1, y: 817 } }; P.forEach(([x, y], i) => CELLPOS[i + 1] = { x, y });
   const star = (x, y, r) => { let d = ""; for (let i = 0; i < 10; i++) { const rr = i % 2 ? r * .48 : r, an = -Math.PI / 2 + i * Math.PI / 5; d += (i ? "L" : "M") + (x + rr * Math.cos(an)).toFixed(1) + " " + (y + rr * Math.sin(an)).toFixed(1); } return d + "Z"; };
   const badge = (n, draw) => { const { x, y } = CELLPOS[n], g = el("g", { transform: `translate(${x + 40} ${y - 42})` });
     el("circle", { r: 24, fill: "#FFF8EC", stroke: INK, "stroke-width": 4 }, g); draw(g); };
@@ -798,7 +798,7 @@ function renderTrack(){
       lay.appendChild(t); TOK[id] = t;
     }
     t.classList.toggle("turn", id === cid);
-    t.style.left = ((c.x + 320) / 19.2 + (k - 1) * 2.5 - 1.25) + "%"; t.style.top = (c.y + 150) / 10.8 + "%"; t.classList.toggle("alto", (c.y + 150) / 10.8 < 40);
+    t.style.left = ((c.x + 320) / 19.2 + (k - 1) * 2.5 - 1.25) + "%"; t.style.top = (c.y + 150) / 10.8 + "%"; t.classList.toggle("alto", (c.y + 150) / 10.8 < 20);
     t.querySelector(".tkname").textContent = (p.nombre || "") + " " + objsOf(id).map(o => OBJ_ICON[o]).join("");
     keep.add(id);
   });
