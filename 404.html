@@ -165,6 +165,7 @@ input[type=range]{width:100%;accent-color:var(--frame)}
 .tkw{position:absolute;width:7%;transform:translate(-50%,-90%);transition:left .3s ease,top .3s ease;z-index:2;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
 .tkw.turn{z-index:3;filter:drop-shadow(0 0 8px #F2C14E) drop-shadow(0 4px 0 rgba(0,0,0,.35))}
 .tkw .mini{width:100%}
+.tkw.alto{transform:translate(-50%,-58%)}
 .tkw .mini.big{transform:scale(.85);transform-origin:50% 100%}
 .tkw .mini.big .c,.tkw .mini.big .accw{scale:1.6;transform-origin:50% 100%;transition:scale .5s cubic-bezier(.3,1.6,.5,1)}
 .tkw.turn .mini.big .c,.tkw.turn .mini.big .accw{scale:2.2;animation:inflar 1.4s ease-in-out .5s infinite}
@@ -768,6 +769,12 @@ function buildTrack(){
   /* pruebas: regalito */
   TESTS.forEach(n => badge(n, g => { el("rect", { x: -12, y: -6, width: 24, height: 18, fill: "#E0483B", stroke: INK, "stroke-width": 3 }, g);
     el("rect", { x: -14, y: -12, width: 28, height: 7, fill: "#E0483B", stroke: INK, "stroke-width": 3 }, g); el("path", { d: "M0 -12 V12", stroke: "#F6C445", "stroke-width": 4 }, g); }));
+  /* casillero 10 congelado */
+  { const { x, y } = CELLPOS[POZO], g = el("g", { transform: `translate(${x + 14} ${y + 6}) rotate(44)` });
+    el("ellipse", { cx: 0, cy: 0, rx: 78, ry: 66, fill: "#BFE6FA", opacity: .95, stroke: "#5AA9D6", "stroke-width": 4 }, g);
+    el("path", { d: "M-40 -30 L-10 -8 L-24 18 M10 -40 L4 -12 L30 6 L18 34 M-50 30 L-30 22", stroke: "#FFFFFF", "stroke-width": 4, fill: "none", "stroke-linecap": "round", opacity: .9 }, g);
+    { const t = el("text", { x: 0, y: 14, "text-anchor": "middle", "font-family": "Poppins, sans-serif", "font-size": 40, "font-weight": 700, fill: "#1E4E70", transform: "rotate(-44)" }, g); t.textContent = "10"; }
+    [[-34,-38],[38,-30],[24,30]].forEach(([a, b]) => el("path", { d: `M${a} ${b - 8} V${b + 8} M${a - 7} ${b - 4} L${a + 7} ${b + 4} M${a - 7} ${b + 4} L${a + 7} ${b - 4}`, stroke: "#FFF", "stroke-width": 2.5 }, g)); }
   /* muñeco: perdés turno */
   badge(POZO, g => { el("circle", { cy: 6, r: 9, fill: "#FFF", stroke: INK, "stroke-width": 3 }, g); el("circle", { cy: -8, r: 6, fill: "#FFF", stroke: INK, "stroke-width": 3 }, g); el("path", { d: "M-7 -14 h14 M-4 -14 v-6 h8 v6", stroke: INK, "stroke-width": 3, fill: INK }, g); });
   /* bicho verde: roba estrella */
@@ -791,7 +798,7 @@ function renderTrack(){
       lay.appendChild(t); TOK[id] = t;
     }
     t.classList.toggle("turn", id === cid);
-    t.style.left = ((c.x + 320) / 19.2 + (k - 1) * 2.5 - 1.25) + "%"; t.style.top = (c.y + 150) / 10.8 + "%";
+    t.style.left = ((c.x + 320) / 19.2 + (k - 1) * 2.5 - 1.25) + "%"; t.style.top = (c.y + 150) / 10.8 + "%"; t.classList.toggle("alto", (c.y + 150) / 10.8 < 40);
     t.querySelector(".tkname").textContent = (p.nombre || "") + " " + objsOf(id).map(o => OBJ_ICON[o]).join("");
     keep.add(id);
   });
