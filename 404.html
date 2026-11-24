@@ -533,7 +533,6 @@ let camBusy = false;
 $("camShot").addEventListener("click", async () => {
   const v = $("camV"); if (!v.videoWidth || camBusy) return; camBusy = true;
   const cd = $("camCount"); cd.hidden = false;
-  for (const n of [3, 2, 1]) { cd.textContent = n; await new Promise(r => setTimeout(r, 700)); }
   cd.textContent = ""; cd.classList.add("flash");
   const vw = v.videoWidth, vh = v.videoHeight, tw = Math.min(vw, vh * 3 / 4), th = tw * 4 / 3, ox = (vw - tw) / 2, oy = (vh - th) / 2;
   /* solo la zona del óvalo (con margen) */
