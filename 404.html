@@ -517,11 +517,14 @@ function showCut(){
 let camStream = null;
 function camStop(){ if (camStream) camStream.getTracks().forEach(t => t.stop()); camStream = null; $("cam").hidden = true; }
 $("camBtn").addEventListener("click", async () => {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $("file").click(); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $("msg").textContent = "Este navegador no deja usar la cámara del juego. Abrí el link en Safari o Chrome."; $("file").click(); return; }
   try {
     camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false });
     $("camV").srcObject = camStream; $("cam").hidden = false;
-  } catch (e) { $("file").click(); }
+  } catch (e) {
+    $("msg").innerHTML = "📷 No pude abrir la cámara del juego (la que tiene la guía). Dale permiso de cámara a esta página: en el iPhone, tocá <b>aA</b> o el candado en la barra de dirección → <b>Cámara: Permitir</b>, y volvé a tocar Selfie. <button type='button' class='btn' id='useNative'>Usar la cámara del teléfono igual</button>";
+    const u = document.getElementById("useNative"); if (u) u.onclick = () => $("file").click();
+  }
 });
 $("camX").addEventListener("click", camStop);
 let camBusy = false;
