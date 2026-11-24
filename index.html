@@ -478,7 +478,7 @@ async function cutout(src){
   const W = img.naturalWidth, H = img.naturalHeight;
   const det = fd.detect(img).detections[0]; if (!det) throw new Error("sin cara");
   const bb = det.boundingBox;
-  const cx = bb.originX + bb.width / 2, w = bb.width * 1.8, top = bb.originY - bb.height * 1.0, bottom = bb.originY + bb.height * 1.05, h = bottom - top;
+  const cx = bb.originX + bb.width / 2, w = bb.width * 2.6, top = bb.originY - bb.height * 1.25, bottom = bb.originY + bb.height * 1.25, h = bottom - top;
   const chin = bb.originY + bb.height * 0.98, ecy = bb.originY + bb.height * 0.35, erx = bb.width * 0.6, ery = bb.height * 0.66;
   const res = sg.segment(img); const mask = res.confidenceMasks[0].getAsFloat32Array(); res.close();
   const OW = 420, OH = Math.round(OW * h / w), pad = 6;
@@ -491,7 +491,7 @@ async function cutout(src){
     for (let xx = 0; xx < OW; xx++) {
       const sx = Math.floor(cx - w / 2 + xx / OW * w), i = (yy * OW + xx) * 4;
       const m = (sx < 0 || sy < 0 || sx >= W || sy >= H) ? 0 : mask[sy * W + sx];
-      const ex = (sx - cx) / erx, ey = (sy - ecy) / ery, ell = sy < ecy ? Math.max(0, Math.min(1, (1 - (ex * ex + ((sy - ecy) / (bb.height * 1.0)) ** 2)) * 16)) : Math.max(0, Math.min(1, (1 - (ex * ex + ey * ey)) * 16));
+      const ex = (sx - cx) / erx, ey = (sy - ecy) / ery, ell = sy <= chin ? 1 : Math.max(0, Math.min(1, (1 - Math.abs(sx - cx) / (bb.width * 0.32)) * 4)) * Math.max(0, 1 - (sy - chin) / (bb.height * 0.22));
       px[i + 3] = Math.round(255 * Math.min(1, Math.max(0, (m - 0.5) / 0.25)) * fade * ell);
     }
   }
@@ -500,7 +500,7 @@ async function cutout(src){
   const out = document.createElement("canvas"); out.width = OW + pad * 2; out.height = OH + pad * 2; const o = out.getContext("2d");
   const sil = (color) => { const t = document.createElement("canvas"); t.width = OW; t.height = OH; const tx = t.getContext("2d"); tx.drawImage(c, 0, 0); tx.globalCompositeOperation = "source-in"; tx.fillStyle = color; tx.fillRect(0, 0, OW, OH); return t; };
   const blk = sil("#111"), wht = sil("#fff");
-  for (let k = 0; k < 16; k++) { const a = k / 16 * Math.PI * 2; o.drawImage(blk, pad + Math.cos(a) * 3.5, pad + Math.sin(a) * 3.5); }
+  
   o.drawImage(c, pad, pad);
   return out.toDataURL("image/png");
 }
