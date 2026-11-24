@@ -388,7 +388,7 @@ function mini(a, extra){
   L("02_base_abajo_piel" + pk, "bot"); L("01_base_arriba_piel" + pk, "top");
   if (a.recorte && typeof a.cara === "string" && a.cara.startsWith("data:image/")) {
     d.classList.add("big"); const c = document.createElement("div"); c.className = "c"; const im = document.createElement("img"); im.alt = ""; im.src = a.cara;
-    const t = `scale(${Number(a.zoom) || 1.45})`;
+    const t = `scale(${Math.max(Number(a.zoom) || 0, 1.7)})`;
     im.style.transform = t; c.appendChild(im); d.appendChild(c);
     L(a.calzado, "bot"); L(a.abajo, "bot"); const tp2 = L(a.arriba, "top"); if (tp2) tp2.style.filter = CLOTH[a.ropacolor] || "none";
     if (a.acc) { const w = document.createElement("div"); w.className = "accw"; w.style.transform = t; d.appendChild(w); const ai = L(a.acc, "accl"); w.appendChild(ai); }
@@ -499,7 +499,7 @@ async function cutout(src){
     for (let xx = 0; xx < OW; xx++) {
       const sx = Math.floor(cx - w / 2 + xx / OW * w), i = (yy * OW + xx) * 4;
       const m = (sx < 0 || sy < 0 || sx >= W || sy >= H) ? 0 : mask[sy * W + sx];
-      const ex = (sx - cx) / erx, ey = (sy - ecy) / ery, ell = sy <= chin ? Math.max(0, Math.min(1, (1 - (((sx - cx) / (bb.width * 0.7)) ** 2 + ((sy - (bb.originY + bb.height * 0.3)) / (bb.height * 1.05)) ** 2)) * 8)) : Math.max(0, Math.min(1, (1 - Math.abs(sx - cx) / (bb.width * 0.32)) * 4)) * Math.max(0, 1 - (sy - chin) / (bb.height * 0.22));
+      const ex = (sx - cx) / erx, ey = (sy - ecy) / ery, ell = sy <= chin ? (sy < bb.originY + bb.height * 0.4 ? Math.max(0, Math.min(1, (1 - (((sx - cx) / (bb.width * 0.72)) ** 2 + ((sy - (bb.originY + bb.height * 0.4)) / (bb.height * 1.1)) ** 2)) * 8)) : Math.max(0, Math.min(1, (1 - (((sx - cx) / (bb.width * 0.56)) ** 2 + ((sy - (bb.originY + bb.height * 0.4)) / (bb.height * 0.62)) ** 2)) * 8))) : Math.max(0, Math.min(1, (1 - Math.abs(sx - cx) / (bb.width * 0.32)) * 4)) * Math.max(0, 1 - (sy - chin) / (bb.height * 0.22));
       px[i + 3] = Math.round(255 * Math.min(1, Math.max(0, (m - 0.5) / 0.25)) * fade * ell);
     }
   }
@@ -552,7 +552,7 @@ async function usePhoto(src){
   {
     const small = await shrink(src); if (!small) { $("msg").textContent = "No pude abrir esa foto. Probá con otra."; return; }
     $("busy").hidden = false; $("adjust").hidden = false; $("msg").textContent = "";
-    zoom = 1.45; posX = 0; posY = 0; $("zoom").value = zoom;
+    zoom = 1.7; posX = 0; posY = 0; $("zoom").value = zoom;
     try {
       photo = await cutout(small); recorte = true; showCut(); applyPhoto();
     } catch (err) {
