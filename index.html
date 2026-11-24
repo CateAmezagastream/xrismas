@@ -75,10 +75,10 @@ input[type=range]{width:100%;accent-color:var(--frame)}
 .guide .eyes span{position:absolute;right:0;top:-1.2em;font-family:var(--pixel);font-size:.7rem;color:#fff;text-shadow:0 0 3px #000}
 .guide .face{position:absolute;left:16%;right:16%;top:12%;bottom:6%;border:2px dashed rgba(255,255,255,.85);border-radius:50%;filter:drop-shadow(0 0 2px #000)}
 .head.drag{cursor:grab;touch-action:none}
-.cut,.mini .c{position:absolute;left:21%;width:58%;top:-2.4%;height:33%;pointer-events:none}
+.cut,.mini .c{position:absolute;left:21%;width:58%;top:3%;height:33%;pointer-events:none}
 .big .pelol,.big .accl{transform:translateY(-1%) scale(1.05);transform-origin:50% 14%}
 .cut img,.mini .c img{position:absolute;left:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;transform-origin:50% 100%}
-.cutzone{position:absolute;left:21%;width:58%;top:-2.4%;height:33%;touch-action:none;cursor:grab;z-index:2}
+.cutzone{position:absolute;left:21%;width:58%;top:3%;height:33%;touch-action:none;cursor:grab;z-index:2}
 .busy{font-family:var(--pixel);text-align:center;margin:0;color:var(--ink)}
 .top,.bot{transform-origin:50% 50%}
 [data-body="curvas"] .top{transform:scaleX(.96)}[data-body="curvas"] .bot{transform:scaleX(1.07)}
@@ -205,7 +205,7 @@ input[type=range]{width:100%;accent-color:var(--frame)}
 .camTip{position:absolute;left:0;right:0;bottom:8px;margin:0;text-align:center;color:#fff;font-weight:600;font-size:15px;text-shadow:0 1px 3px #000;padding:0 10px}
 .camRow{display:flex;gap:12px}.camRow .btn{min-width:130px}
 .accw{position:absolute;inset:0;pointer-events:none;transform-origin:50% 100%}
-.big .accw{inset:auto;left:21%;width:58%;top:-2.4%;height:33%}
+.big .accw{inset:auto;left:21%;width:58%;top:3%;height:33%}
 .big .accw>img{position:absolute;inset:auto;left:-36.207%;width:172.414%;top:7.27%;height:303%}
 .slot.sel>b{display:none}
 </style>
@@ -478,7 +478,7 @@ async function cutout(src){
   const W = img.naturalWidth, H = img.naturalHeight;
   const det = fd.detect(img).detections[0]; if (!det) throw new Error("sin cara");
   const bb = det.boundingBox;
-  const cx = bb.originX + bb.width / 2, w = bb.width * 2.0, top = bb.originY - bb.height * 1.0, bottom = bb.originY + bb.height * 1.15, h = bottom - top;
+  const cx = bb.originX + bb.width / 2, w = bb.width * 2.0, top = bb.originY - bb.height * 1.0, bottom = bb.originY + bb.height * 1.04, h = bottom - top;
   const chin = bb.originY + bb.height * 0.98, ecy = bb.originY + bb.height * 0.35, erx = bb.width * 0.6, ery = bb.height * 0.66;
   const res = sg.segment(img); const mask = res.confidenceMasks[0].getAsFloat32Array(); res.close();
   const OW = 420, OH = Math.round(OW * h / w), pad = 6;
